@@ -165,13 +165,31 @@ impl Effect {
             | Self::OnCritSpeed
             | Self::OnCritStressHealDone
             | Self::OnCritStressResist => ApplicationKind::ApplyOnce,
-            Self::AbyssalStun(_) | Self::Adrenaline(_) | Self::AntiqBlight(_) | Self::AntiqBlightBuff(_) => ApplicationKind::Queue,
+            Self::AntiqProtectMeClearGuardsPerformer | Self::AntiqProtectMeClearGuardsTarget => ApplicationKind::Immediate,
+            Self::AbyssalStun(_)
+            | Self::Adrenaline(_)
+            | Self::AntiqBlight(_)
+            | Self::AntiqBlightBuff(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(_)
+            | Self::AntiqDodge(_) => ApplicationKind::Queue,
         }
     }
 
     const fn buffs(&self) -> &'static [Buff] {
         match self {
-            Self::AntiqBlightBuff(lv) => &[Buff::AntiqBlightBuff(lv)],
+            Self::AntiqBlightBuff(1) => &[Buff::AntiqBlightBuff(1)],
+            Self::AntiqBlightBuff(2) => &[Buff::AntiqBlightBuff(2)],
+            Self::AntiqBlightBuff(3) => &[Buff::AntiqBlightBuff(3)],
+            Self::AntiqBlightBuff(4) => &[Buff::AntiqBlightBuff(4)],
+            Self::AntiqBlightBuff(5) => &[Buff::AntiqBlightBuff(5)],
+            Self::AntiqBlightDebuff(1) => &[Buff::AntiqBlightDebuff(1)],
+            Self::AntiqBlightDebuff(2) => &[Buff::AntiqBlightDebuff(2)],
+            Self::AntiqBlightDebuff(3) => &[Buff::AntiqBlightDebuff(3)],
+            Self::AntiqBlightDebuff(4) => &[Buff::AntiqBlightDebuff(4)],
+            Self::AntiqBlightDebuff(5) => &[Buff::AntiqBlightDebuff(5)],
             Self::OnCritAcc => &[Buff::OnCritAcc],
             Self::OnCritBleedChance => &[Buff::OnCritBleedChance],
             Self::OnCritBlightChance => &[Buff::OnCritBlightChance],
@@ -184,17 +202,37 @@ impl Effect {
             Self::OnCritSpeed => &[Buff::OnCritSpd],
             Self::OnCritStressHealDone => &[Buff::OnCritStressHealBuff],
             Self::OnCritStressResist => &[Buff::OnCritStressResist],
-            Self::AbyssalKiller(_) | Self::AbyssalStun(_) | Self::Adrenaline(_) | Self::AntiqBlight(_) => &[],
+            Self::AbyssalKiller(_)
+            | Self::AbyssalStun(_)
+            | Self::Adrenaline(_)
+            | Self::AntiqBlight(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(_)
+            | Self::AntiqDodge(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget => &[],
         }
     }
 
     const fn chance(&self) -> u8 {
         match self {
-            Self::AbyssalStun(lv) => 10 * lv + 100,
-            Self::AntiqBlight(lv) => 10 * lv + 90,
+            Self::AbyssalStun(5) => 150,
+            Self::AbyssalStun(4) | Self::AntiqBlight(5) | Self::AntiqBlightDebuff(5) | Self::AntiqDistract(5) => 140,
+            Self::AbyssalStun(3) | Self::AntiqBlight(4) | Self::AntiqBlightDebuff(4) | Self::AntiqDistract(4) => 130,
+            Self::AbyssalStun(2) | Self::AntiqBlight(3) | Self::AntiqBlightDebuff(3) | Self::AntiqDistract(3) => 120,
+            Self::AbyssalStun(1) | Self::AntiqBlight(2) | Self::AntiqBlightDebuff(2) | Self::AntiqDistract(2) => 110,
             Self::AbyssalKiller(_)
             | Self::Adrenaline(_)
+            | Self::AntiqBlight(1)
             | Self::AntiqBlightBuff(_)
+            | Self::AntiqBlightDebuff(1)
+            | Self::AntiqCower(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(1)
+            | Self::AntiqDodge(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget
             | Self::OnCritAcc
             | Self::OnCritBleedChance
             | Self::OnCritBlightChance
@@ -212,56 +250,103 @@ impl Effect {
 
     const fn combat_stat_buff(&self) -> &'static [CombatStatBuff] {
         match self {
-            Self::Adrenaline(1) => &[
-                CombatStatBuff::AttackRatingAdd(5),
-                CombatStatBuff::DamageLowMultiply(20),
-                CombatStatBuff::DamageHighMultiply(20),
-            ],
-            Self::Adrenaline(2) => &[
-                CombatStatBuff::AttackRatingAdd(6),
-                CombatStatBuff::DamageLowMultiply(22),
-                CombatStatBuff::DamageHighMultiply(22),
-            ],
-            Self::Adrenaline(3) => &[
-                CombatStatBuff::AttackRatingAdd(7),
-                CombatStatBuff::DamageLowMultiply(24),
-                CombatStatBuff::DamageHighMultiply(24),
+            Self::Adrenaline(5) => &[
+                CombatStatBuff::AttackRatingAdd(9),
+                CombatStatBuff::DamageHighMultiply(30),
+                CombatStatBuff::DamageLowMultiply(30),
             ],
             Self::Adrenaline(4) => &[
                 CombatStatBuff::AttackRatingAdd(8),
-                CombatStatBuff::DamageLowMultiply(26),
                 CombatStatBuff::DamageHighMultiply(26),
+                CombatStatBuff::DamageLowMultiply(26),
             ],
-            Self::Adrenaline(5) => &[
-                CombatStatBuff::AttackRatingAdd(9),
-                CombatStatBuff::DamageLowMultiply(30),
-                CombatStatBuff::DamageHighMultiply(30),
+            Self::Adrenaline(3) => &[
+                CombatStatBuff::AttackRatingAdd(7),
+                CombatStatBuff::DamageHighMultiply(24),
+                CombatStatBuff::DamageLowMultiply(24),
             ],
-            Self::AbyssalKiller(1) => &[CombatStatBuff::DamageLowMultiply(15), CombatStatBuff::DamageHighMultiply(15)],
-            Self::AbyssalKiller(2) => &[CombatStatBuff::DamageLowMultiply(17), CombatStatBuff::DamageHighMultiply(17)],
-            Self::AbyssalKiller(3) => &[CombatStatBuff::DamageLowMultiply(20), CombatStatBuff::DamageHighMultiply(20)],
-            Self::AbyssalKiller(4) => &[CombatStatBuff::DamageLowMultiply(22), CombatStatBuff::DamageHighMultiply(22)],
-            Self::AbyssalKiller(5) => &[CombatStatBuff::DamageLowMultiply(25), CombatStatBuff::DamageHighMultiply(25)],
-            Self::AbyssalStun(_) | Self::AntiqBlight(_) | Self::AntiqBlightBuff(_) => &[],
+            Self::Adrenaline(2) => &[
+                CombatStatBuff::AttackRatingAdd(6),
+                CombatStatBuff::DamageHighMultiply(22),
+                CombatStatBuff::DamageLowMultiply(22),
+            ],
+            Self::Adrenaline(1) => &[
+                CombatStatBuff::AttackRatingAdd(5),
+                CombatStatBuff::DamageHighMultiply(20),
+                CombatStatBuff::DamageLowMultiply(20),
+            ],
+            Self::AntiqDistract(1) => &[CombatStatBuff::AttackRatingAdd(-10)],
+            Self::AntiqDistract(2) => &[CombatStatBuff::AttackRatingAdd(-11)],
+            Self::AntiqDistract(3) => &[CombatStatBuff::AttackRatingAdd(-12)],
+            Self::AntiqDistract(4) => &[CombatStatBuff::AttackRatingAdd(-14)],
+            Self::AntiqDistract(5) => &[CombatStatBuff::AttackRatingAdd(-15)],
+            Self::AbyssalKiller(5) => &[CombatStatBuff::DamageHighMultiply(25), CombatStatBuff::DamageLowMultiply(25)],
+            Self::AbyssalKiller(4) => &[CombatStatBuff::DamageHighMultiply(22), CombatStatBuff::DamageLowMultiply(22)],
+            Self::AbyssalKiller(3) => &[CombatStatBuff::DamageHighMultiply(20), CombatStatBuff::DamageLowMultiply(20)],
+            Self::AbyssalKiller(2) => &[CombatStatBuff::DamageHighMultiply(17), CombatStatBuff::DamageLowMultiply(17)],
+            Self::AbyssalKiller(1) => &[CombatStatBuff::DamageHighMultiply(15), CombatStatBuff::DamageLowMultiply(15)],
+            Self::AntiqCower(5) => &[CombatStatBuff::DefenseRatingAdd(25)],
+            Self::AntiqCower(4) => &[CombatStatBuff::DefenseRatingAdd(22)],
+            Self::AntiqCower(3) => &[CombatStatBuff::DefenseRatingAdd(20)],
+            Self::AntiqCower(2) => &[CombatStatBuff::DefenseRatingAdd(18)],
+            Self::AntiqCower(1) => &[CombatStatBuff::DefenseRatingAdd(15)],
+            Self::AntiqDodge(5) => &[CombatStatBuff::DefenseRatingAdd(10)],
+            Self::AntiqDodge(4) => &[CombatStatBuff::DefenseRatingAdd(9)],
+            Self::AntiqDefBuff(5) => &[CombatStatBuff::DefenseRatingAdd(8), CombatStatBuff::ProtectionRatingAdd(20)],
+            Self::AntiqDodge(3) => &[CombatStatBuff::DefenseRatingAdd(7)],
+            Self::AntiqDefBuff(4) => &[CombatStatBuff::DefenseRatingAdd(7), CombatStatBuff::ProtectionRatingAdd(18)],
+            Self::AntiqDefBuff(3) => &[CombatStatBuff::DefenseRatingAdd(6), CombatStatBuff::ProtectionRatingAdd(15)],
+            Self::AntiqDodge(2) => &[CombatStatBuff::DefenseRatingAdd(5)],
+            Self::AntiqDefBuff(2) => &[CombatStatBuff::DefenseRatingAdd(5), CombatStatBuff::ProtectionRatingAdd(13)],
+            Self::AntiqDefBuff(1) => &[CombatStatBuff::DefenseRatingAdd(4), CombatStatBuff::ProtectionRatingAdd(10)],
+            Self::AntiqDodge(1) => &[CombatStatBuff::DefenseRatingAdd(3)],
+            Self::AbyssalStun(_)
+            | Self::AntiqBlight(_)
+            | Self::AntiqBlightBuff(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget => &[],
         }
     }
 
     const fn condition(&self) -> Option<Condition> {
         match self {
             Self::AbyssalKiller(_) => Some(Condition::MonsterType(MonsterType::Eldritch)),
-            Self::AbyssalStun(_) | Self::Adrenaline(_) | Self::AntiqBlight(_) | Self::AntiqBlightBuff(_) => None,
+            Self::AbyssalStun(_)
+            | Self::Adrenaline(_)
+            | Self::AntiqBlight(_)
+            | Self::AntiqBlightBuff(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(_)
+            | Self::AntiqDodge(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget => None,
         }
     }
 
     const fn duration(&self) -> Option<Duration> {
         match self {
-            Self::AbyssalStun(_) => Some(Duration::Rounds(1)),
-            Self::OnCritBleedChance | Self::OnCritBlightChance | Self::OnCritHealDone | Self::OnCritStressHealDone => Some(Duration::Rounds(2)),
-            Self::AntiqBlight(_) | Self::OnCritDmg | Self::OnCritDmgBleeding | Self::OnCritDmgMarked | Self::OnCritStressResist => {
-                Some(Duration::Rounds(3))
+            Self::Adrenaline(_) | Self::AntiqBlightBuff(_) | Self::AntiqCower(_) | Self::AntiqDefBuff(_) => Some(Duration::Rounds(4)),
+            Self::AntiqBlight(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqDodge(_)
+            | Self::OnCritDmg
+            | Self::OnCritDmgBleeding
+            | Self::OnCritDmgMarked
+            | Self::OnCritStressResist => Some(Duration::Rounds(3)),
+            Self::AntiqDistract(_) | Self::OnCritBleedChance | Self::OnCritBlightChance | Self::OnCritHealDone | Self::OnCritStressHealDone => {
+                Some(Duration::Rounds(2))
             }
-            Self::Adrenaline(_) | Self::AntiqBlightBuff(_) => Some(Duration::Rounds(4)),
-            Self::AbyssalKiller(_) | Self::OnCritAcc | Self::OnCritDef | Self::OnCritProt | Self::OnCritSpeed => None,
+            Self::AbyssalStun(_) => Some(Duration::Rounds(1)),
+            Self::AbyssalKiller(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::OnCritAcc
+            | Self::OnCritDef
+            | Self::OnCritProt
+            | Self::OnCritSpeed => None,
         }
     }
 
@@ -272,6 +357,13 @@ impl Effect {
             | Self::Adrenaline(_)
             | Self::AntiqBlight(_)
             | Self::AntiqBlightBuff(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(_)
+            | Self::AntiqDodge(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget
             | Self::OnCritAcc
             | Self::OnCritBleedChance
             | Self::OnCritBlightChance
@@ -289,10 +381,18 @@ impl Effect {
 
     const fn on_miss(&self) -> bool {
         match self {
-            Self::Adrenaline(_) | Self::AntiqBlightBuff(_) => true,
+            Self::Adrenaline(_)
+            | Self::AntiqBlightBuff(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDodge(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget => true,
             Self::AbyssalKiller(_)
             | Self::AbyssalStun(_)
             | Self::AntiqBlight(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqDistract(_)
             | Self::OnCritAcc
             | Self::OnCritBleedChance
             | Self::OnCritBlightChance
@@ -308,15 +408,24 @@ impl Effect {
         }
     }
 
-    const fn status_effect(&self) -> Option<StatusEffect> {
+    const fn status_effect(&self) -> &'static [StatusEffect] {
         match self {
-            Self::Adrenaline(_) => Some(StatusEffect::Cure),
-            Self::AntiqBlight(1) => Some(StatusEffect::DotPoison(1)),
-            Self::AntiqBlight(2..=3) => Some(StatusEffect::DotPoison(2)),
-            Self::AntiqBlight(4) => Some(StatusEffect::DotPoison(3)),
-            Self::AntiqBlight(5) => Some(StatusEffect::DotPoison(4)),
-            Self::AbyssalStun(_) => Some(StatusEffect::Stun),
-            Self::AbyssalKiller(_) | Self::AntiqBlightBuff(_) => None,
+            Self::AntiqProtectMeClearGuardsPerformer | Self::AntiqProtectMeClearGuardsTarget => {
+                &[StatusEffect::ClearGuarded, StatusEffect::ClearGuarding]
+            }
+            Self::Adrenaline(_) => &[StatusEffect::Cure],
+            Self::AntiqBlight(1) => &[StatusEffect::DotPoison(1)],
+            Self::AntiqBlight(2..=3) => &[StatusEffect::DotPoison(2)],
+            Self::AntiqBlight(4) => &[StatusEffect::DotPoison(3)],
+            Self::AntiqBlight(5) => &[StatusEffect::DotPoison(4)],
+            Self::AbyssalStun(_) => &[StatusEffect::Stun],
+            Self::AbyssalKiller(_)
+            | Self::AntiqBlightBuff(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(_)
+            | Self::AntiqDodge(_) => &[],
         }
     }
 
@@ -325,6 +434,8 @@ impl Effect {
             Self::AbyssalKiller(_)
             | Self::Adrenaline(_)
             | Self::AntiqBlightBuff(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
             | Self::OnCritAcc
             | Self::OnCritBleedChance
             | Self::OnCritBlightChance
@@ -337,7 +448,13 @@ impl Effect {
             | Self::OnCritSpeed
             | Self::OnCritStressHealDone
             | Self::OnCritStressResist => Target::Performer,
-            Self::AbyssalStun(_) | Self::AntiqBlight(_) => Target::Target,
+            Self::AbyssalStun(_)
+            | Self::AntiqBlight(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(_)
+            | Self::AntiqDodge(_)
+            | Self::AntiqProtectMeClearGuardsTarget => Target::Target,
         }
     }
 }

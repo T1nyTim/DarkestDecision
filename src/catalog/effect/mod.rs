@@ -3,10 +3,13 @@ pub mod effect;
 
 enum ApplicationKind {
     ApplyOnce,
+    Immediate,
     Queue,
 }
 
 enum Buff {
+    AntiqBlightBuff(u8),
+    AntiqBlightDebuff(u8),
     OnCritAcc,
     OnCritBleedChance,
     OnCritBlightChance,
@@ -102,9 +105,11 @@ enum BuffKind {
 }
 
 enum CombatStatBuff {
-    AttackRatingAdd(u8),
+    AttackRatingAdd(i8),
     DamageLowMultiply(u8),
     DamageHighMultiply(u8),
+    DefenseRatingAdd(u8),
+    ProtectionRatingAdd(u8),
 }
 
 enum Condition {
@@ -136,6 +141,8 @@ enum Status {
 }
 
 enum StatusEffect {
+    ClearGuarded,
+    ClearGuarding,
     Cure,
     DotPoison(u8),
     Stun,
