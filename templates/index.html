@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Darkest Decision</title>
+        <link rel="stylesheet" href="/static/styles.css">
+        <script src="/static/htmx.min.js"></script>
+    </head>
+    <body>
+        <main class="page-shell">
+            <header class="page-header">
+                <p class="eyebrow">Combat anaylsis prototype</p>
+                <h1>Encounter Evaluator</h1>
+                <p>Build the party, choose the exact encounter composition, then submit the normalized state to the future skill evaluator.</p>
+            </header>
+            <form id="encounter-form" hx-action="/evaluate" hx-method="post" hx-swap="innerHTML">
+                <div class="workspace">
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div><p class="step">01</p><h2 id="team-heading">Party</h2></div>
+                            <p>Ranks are shown rear to front.</p>
+                        </div>
+                        <div class="party-line">
+                            <label class="hero-card">
+                                <span class="rank">Rank 4</span>
+                                <select name="hero_rank_4">
+                                    <option value="">Select hero</option>
+                                    {% for hero in hero_classes %}
+                                    <option value="{{ hero.value() }}">{{ hero.label() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label class="hero-card">
+                                <span class="rank">Rank 3</span>
+                                <select name="hero_rank_3">
+                                    <option value="">Select hero</option>
+                                    {% for hero in hero_classes %}
+                                    <option value="{{ hero.value() }}">{{ hero.label() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label class="hero-card">
+                                <span class="rank">Rank 2</span>
+                                <select name="hero_rank_2">
+                                    <option value="">Select hero</option>
+                                    {% for hero in hero_classes %}
+                                    <option value="{{ hero.value() }}">{{ hero.label() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label class="hero-card">
+                                <span class="rank">Rank 1</span>
+                                <select name="hero_rank_1">
+                                    <option value="">Select hero</option>
+                                    {% for hero in hero_classes %}
+                                    <option value="{{ hero.value() }}">{{ hero.label() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </div>
+                    </section>
+                    <section class="panel">
+                        <div class="panel-heading">
+                            <div><p class="step">02</p><h2 id="encounter-heading">Encounter</h2></div>
+                            <p>Each final option is one composition from the selected encounter set.</p>
+                        </div>
+                        <div id="encounter-selection" class="field-grid">
+                            <div class="field">
+                                <label for="location">Location</label>
+                                <select
+                                    id="location"
+                                    name="location"
+                                    required
+                                    hx-action="/encounter/difficulties"
+                                    hx-method="get"
+                                    hx-trigger="change"
+                                    hx-target="#encounter-dependent-fields"
+                                    hx-swap="innerHTML"
+                                >
+                                    <option value="">Select location</option>
+                                    {% for location in locations %}
+                                    <option value="{{ location.value() }}">{{ location.label() }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div id="encounter-dependent-fields" class="dependent-fields">
+                                <div class="field">
+                                    <label for="difficulty">Difficulty</label>
+                                    <select id="difficulty" name="difficulty" disabled required><option value="">Select location first</option></select>
+                                </div>
+                                <div id="area-and-encounter-fields" class="dependent-fields">
+                                    <div class="field">
+                                        <label for="area">Area</label>
+                                        <select id="area" name="area" disabled required><option value="">Select difficulty first</option></select>
+                                    </div>
+                                    <div id="encounter-field" class="field field-wide">
+                                        <label for="encounter">Encounter</label>
+                                        <select id="encounter" name="encounter" disabled required><option value="">Select area first</option></select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+                <div class="submit-row"><button type="submit">Evaluate state</button><span class="htmx-indicator">Evaluating...</span></div>
+            </form>
+            <section id="evaluation" class="evaluation"><p class="muted">No encounter has been submitted.</p></section>
+        </main>
+    </body>
+</html>

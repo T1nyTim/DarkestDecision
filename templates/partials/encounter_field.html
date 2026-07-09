@@ -1,0 +1,9 @@
+<div id="encounter-field" class="field field-wide">
+    <label for="encounter">Encounter</label>
+    <select id="encounter" name="encounter" required>
+        <option value="">Select encounter</option>
+        {% for encounter in encounters %}
+        <option value="{{ encounter.id.value() }}">{{ encounter.label() }}</option>
+        {% endfor %}
+    </select>
+</div>

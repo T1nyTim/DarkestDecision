@@ -1,0 +1,29 @@
+<div class="field">
+    <label for="difficulty">Difficulty</label>
+    <select
+        id="difficulty"
+        name="difficulty"
+        required
+        hx-action="/encounter/areas"
+        hx-method="get"
+        hx-trigger="change"
+        hx-target="#area-and-encounter-fields"
+        hx-swap="innerHTML"
+        hx-include="#location"
+    >
+        <option value="">Select difficulty</option>
+        {% for difficulty in difficulties %}
+        <option value="{{ difficulty.value() }}">{{ difficulty.label() }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div id="area-and-encounter-fields" class="dependent-fields">
+    <div class="field">
+        <label for="area">Area</label>
+        <select id="area" name="area" disabled required><option value="">Select difficulty first</option></select>
+    </div>
+    <div id="encounter-field" class="field field-wide">
+        <label for="encounter">Encounter</label>
+        <select id="encounter" name="encounter" disabled required><option value="">Select area first</option></select>
+    </div>
+</div>

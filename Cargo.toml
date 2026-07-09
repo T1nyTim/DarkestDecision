@@ -1,0 +1,12 @@
+[package]
+name = "darkest-decision"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+askama = "0.16.0"
+askama_web = { version = "0.16.0", features = ["axum-0.8"] }
+axum = "0.8.9"
+serde = { version = "1.0.228", features = ["derive"] }
+tokio = { version = "1.52.3", features = ["macros", "rt-multi-thread"] }
+tower-http = { version = "0.7.0", features = ["fs"] }

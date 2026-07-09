@@ -1,0 +1,34 @@
+{% if is_error %}
+<div class="result-card error"><p class="result-label">Invalid state</p><p>{{ message }}</p></div>
+{% else %}
+<div class="result-card">
+    <div class="result-heading">
+        <div><p class="result-label">Normalized combat state</p><h2>{{ encounter }}</h2></div>
+        <span class="status">Ready</span>
+    </div>
+    <dl class="summary-grid">
+        <div><dt>Location</dt><dd>{{ location }}</dd></div>
+        <div><dt>Difficulty</dt><dd>{{ difficulty }}</dd></div>
+        <div><dt>Area</dt><dd>{{ area }}</dd></div>
+    </dl>
+    <div class="result-columns">
+        <div>
+            <h3>Party</h3>
+            <ol class="entity-list">
+                {% for member in team %}
+                <li><span>Rank {{ member.rank }}</span><strong>{{ member.hero_class.label() }}</strong></li>
+                {% endfor %}
+            </ol>
+        </div>
+        <div>
+            <h3>Enemies</h3>
+            <ol class="entity-list">
+                {% for enemy in enemies %}
+                <li><span>Enemy</span><strong>{{ enemy.label() }}</strong></li>
+                {% endfor %}
+            </ol>
+        </div>
+    </div>
+    <p class="result-note">{{ message }}</p>
+</div>
+{% endif %}

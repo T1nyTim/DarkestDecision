@@ -1,0 +1,23 @@
+<div class="field">
+    <label for="area">Area</label>
+    <select
+        id="area"
+        name="area"
+        required
+        hx-action="/encounter/options"
+        hx-method="get"
+        hx-trigger="change"
+        hx-target="#encounter-field"
+        hx-swap="outerHTML"
+        hx-include="#location, #difficulty"
+    >
+        <option value="">Select area</option>
+        {% for area in areas %}
+        <option value="{{ area.value() }}">{{ area.label() }}</option>
+        {% endfor %}
+    </select>
+</div>
+<div id="encounter-field" class="field field-wide">
+    <label for="encounter">Encounter</label>
+    <select id="encounter" name="encounter" disabled required><option value="">Select area first</option></select>
+</div>
