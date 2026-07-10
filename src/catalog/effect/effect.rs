@@ -44,7 +44,7 @@ pub enum Effect {
     CrusaderHealStress(u8),
     CrusaderLight(u8),
     Cure,
-    Cureself,
+    CureSelf,
     Darkness,
     DazzlingLight,
     Defender(u8),
@@ -153,6 +153,10 @@ impl Effect {
     const fn application_kind(&self) -> ApplicationKind {
         match self {
             Self::AbyssalKiller(_)
+            | Self::EldritchKiller(_)
+            | Self::FlareClear
+            | Self::GrAccBuff(_)
+            | Self::GrapeshotVulnerability(_)
             | Self::OnCritAcc
             | Self::OnCritBleedChance
             | Self::OnCritBlightChance
@@ -165,38 +169,231 @@ impl Effect {
             | Self::OnCritSpeed
             | Self::OnCritStressHealDone
             | Self::OnCritStressResist => ApplicationKind::ApplyOnce,
-            Self::AntiqProtectMeClearGuardsPerformer | Self::AntiqProtectMeClearGuardsTarget => ApplicationKind::Immediate,
             Self::AbyssalStun(_)
             | Self::Adrenaline(_)
-            | Self::AntiqBlight(_)
             | Self::AntiqBlightBuff(_)
-            | Self::AntiqBlightDebuff(_)
             | Self::AntiqCower(_)
             | Self::AntiqDefBuff(_)
             | Self::AntiqDistract(_)
-            | Self::AntiqDodge(_) => ApplicationKind::Queue,
+            | Self::AntiqDodge(_)
+            | Self::ArbMarkDebuff(_)
+            | Self::ArbStackingHeal(_)
+            | Self::BellowCrit(_)
+            | Self::BhMarkDebuff(_)
+            | Self::Bolster(_)
+            | Self::BolsterStressBuff(_)
+            | Self::Command(_)
+            | Self::CrusaderBulwark(_)
+            | Self::CrusaderBulwarkMark
+            | Self::CrusaderHealStress(_)
+            | Self::Defender(_)
+            | Self::FortifyResists(_)
+            | Self::GrDodge(_)
+            | Self::HeroStrongStun(_)
+            | Self::HoundHowl(_)
+            | Self::HoundProtect(_) => ApplicationKind::Queue,
+            Self::AntiqSelfSpeed(_)
+            | Self::ArbSelfSpeed(_)
+            | Self::BhSelfSpeed(_)
+            | Self::BuildToFinale(_)
+            | Self::BuildToFinaleSong
+            | Self::CrusaderBulwarkLight
+            | Self::CrusaderLight(_)
+            | Self::CureSelf
+            | Self::Darkness
+            | Self::DazzlingLight
+            | Self::FlareHealStress(_)
+            | Self::FlareLight(_)
+            | Self::GrSelfSpeed(_)
+            | Self::HellionExhaust
+            | Self::HellionExhaustSm => ApplicationKind::QueueOnce,
+            Self::AntiqBlight(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard
+            | Self::ArbMarkTarget
+            | Self::BeastKiller(_)
+            | Self::BhDmgMarked
+            | Self::BhMarkTarget
+            | Self::BhMinorMark
+            | Self::Bleed(_)
+            | Self::BoloPush1(_)
+            | Self::CaltropsPreyDebuff(_)
+            | Self::CaltropsSpdDebuff(_)
+            | Self::ClearCorpses
+            | Self::ClearGuardPerformer
+            | Self::ClearGuardTarget
+            | Self::Cure
+            | Self::Destealth
+            | Self::Disorient(_)
+            | Self::Disrupt(_)
+            | Self::DodgeCurse(_)
+            | Self::EmboldenTeam(_)
+            | Self::GrBleedDebuff(_)
+            | Self::GrBlight(_)
+            | Self::GrBlightDebuff(_)
+            | Self::GrDaggerDmgMarked(_)
+            | Self::GrFadeAttack(_)
+            | Self::HarryBleed(_)
+            | Self::HellionHealSelf(_)
+            | Self::HmDmgMarked(_)
+            | Self::HmGuard
+            | Self::HmMarkTarget
+            | Self::HoundBleed(_)
+            | Self::HoundDebuff(_)
+            | Self::HwOpenVeinBleedDebuff(_)
+            | Self::HwOpenVeinSpdDebuff(_)
+            | Self::HwPistolDmgMarked(_) => ApplicationKind::Stack,
+        }
+    }
+
+    const fn apply_on_death(&self) -> bool {
+        match self {
+            Self::AntiqBlight(_)
+            | Self::Bleed(_)
+            | Self::BoloPush1(_)
+            | Self::ClearCorpses
+            | Self::Disorient(_)
+            | Self::GrBlight(_)
+            | Self::HarryBleed(_)
+            | Self::HoundBleed(_) => true,
+            Self::AbyssalKiller(_)
+            | Self::AbyssalStun(_)
+            | Self::Adrenaline(_)
+            | Self::AntiqBlightDebuff(_)
+            | Self::AntiqCower(_)
+            | Self::AntiqBlightBuff(_)
+            | Self::AntiqDefBuff(_)
+            | Self::AntiqDistract(_)
+            | Self::AntiqDodge(_)
+            | Self::AntiqProtectMeClearGuardsPerformer
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard
+            | Self::AntiqSelfSpeed(_)
+            | Self::ArbMarkDebuff(_)
+            | Self::ArbMarkTarget
+            | Self::ArbSelfSpeed(_)
+            | Self::ArbStackingHeal(_)
+            | Self::BeastKiller(_)
+            | Self::BellowCrit(_)
+            | Self::BhDmgMarked
+            | Self::BhMarkDebuff(_)
+            | Self::BhMinorMark
+            | Self::BhMarkTarget
+            | Self::BhSelfSpeed(_)
+            | Self::Bolster(_)
+            | Self::BolsterStressBuff(_)
+            | Self::BuildToFinale(_)
+            | Self::BuildToFinaleSong
+            | Self::CaltropsPreyDebuff(_)
+            | Self::CaltropsSpdDebuff(_)
+            | Self::ClearGuardPerformer
+            | Self::ClearGuardTarget
+            | Self::Command(_)
+            | Self::CrusaderBulwark(_)
+            | Self::CrusaderBulwarkLight
+            | Self::CrusaderBulwarkMark
+            | Self::CrusaderHealStress(_)
+            | Self::CrusaderLight(_)
+            | Self::Cure
+            | Self::CureSelf
+            | Self::Darkness
+            | Self::DazzlingLight
+            | Self::Defender(_)
+            | Self::Destealth
+            | Self::Disrupt(_)
+            | Self::DodgeCurse(_)
+            | Self::EldritchKiller(_)
+            | Self::EmboldenTeam(_)
+            | Self::FlareClear
+            | Self::FlareHealStress(_)
+            | Self::FlareLight(_)
+            | Self::FortifyResists(_)
+            | Self::GrAccBuff(_)
+            | Self::GrapeshotVulnerability(_)
+            | Self::GrBleedDebuff(_)
+            | Self::GrBlightDebuff(_)
+            | Self::GrDaggerDmgMarked(_)
+            | Self::GrDodge(_)
+            | Self::GrFadeAttack(_)
+            | Self::GrSelfSpeed(_)
+            | Self::HellionExhaust
+            | Self::HellionExhaustSm
+            | Self::HellionHealSelf(_)
+            | Self::HeroStrongStun(_)
+            | Self::HmDmgMarked(_)
+            | Self::HmGuard
+            | Self::HmMarkTarget
+            | Self::HoundDebuff(_)
+            | Self::HoundHowl(_)
+            | Self::HoundProtect(_)
+            | Self::HwOpenVeinBleedDebuff(_)
+            | Self::HwOpenVeinSpdDebuff(_)
+            | Self::HwPistolDmgMarked(_) => false,
         }
     }
 
     const fn buffs(&self) -> &'static [Buff] {
         match self {
-            Self::AntiqBlightBuff(1) => &[Buff::AntiqBlightBuff(1)],
-            Self::AntiqBlightBuff(2) => &[Buff::AntiqBlightBuff(2)],
-            Self::AntiqBlightBuff(3) => &[Buff::AntiqBlightBuff(3)],
-            Self::AntiqBlightBuff(4) => &[Buff::AntiqBlightBuff(4)],
             Self::AntiqBlightBuff(5) => &[Buff::AntiqBlightBuff(5)],
-            Self::AntiqBlightDebuff(1) => &[Buff::AntiqBlightDebuff(1)],
-            Self::AntiqBlightDebuff(2) => &[Buff::AntiqBlightDebuff(2)],
-            Self::AntiqBlightDebuff(3) => &[Buff::AntiqBlightDebuff(3)],
-            Self::AntiqBlightDebuff(4) => &[Buff::AntiqBlightDebuff(4)],
+            Self::AntiqBlightBuff(4) => &[Buff::AntiqBlightBuff(4)],
+            Self::AntiqBlightBuff(3) => &[Buff::AntiqBlightBuff(3)],
+            Self::AntiqBlightBuff(2) => &[Buff::AntiqBlightBuff(2)],
+            Self::AntiqBlightBuff(1) => &[Buff::AntiqBlightBuff(1)],
             Self::AntiqBlightDebuff(5) => &[Buff::AntiqBlightDebuff(5)],
+            Self::AntiqBlightDebuff(4) => &[Buff::AntiqBlightDebuff(4)],
+            Self::AntiqBlightDebuff(3) => &[Buff::AntiqBlightDebuff(3)],
+            Self::AntiqBlightDebuff(2) => &[Buff::AntiqBlightDebuff(2)],
+            Self::AntiqBlightDebuff(1) => &[Buff::AntiqBlightDebuff(1)],
+            Self::BuildToFinale(2) => &[Buff::BuildToFinaleDmgH(2), Buff::BuildToFinaleDmgL(2)],
+            Self::BuildToFinale(1) | Self::BuildToFinaleSong => &[Buff::BuildToFinaleDmgH(1), Buff::BuildToFinaleDmgL(1)],
+            Self::CaltropsPreyDebuff(5) => &[Buff::CaltropsDmgReceived(5)],
+            Self::CaltropsPreyDebuff(4) => &[Buff::CaltropsDmgReceived(4)],
+            Self::CaltropsPreyDebuff(3) => &[Buff::CaltropsDmgReceived(3)],
+            Self::CaltropsPreyDebuff(2) => &[Buff::CaltropsDmgReceived(2)],
+            Self::CaltropsPreyDebuff(1) => &[Buff::CaltropsDmgReceived(1)],
+            Self::BellowCrit(_) => &[Buff::MaaBellowCritReceived],
+            Self::Command(5) => &[
+                Buff::MaaCommandAcc(5),
+                Buff::MaaCommandCrit(5),
+                Buff::MaaCommandGuardedDmgH(5),
+                Buff::MaaCommandGuardedDmgL(5),
+            ],
+            Self::Command(4) => &[
+                Buff::MaaCommandAcc(4),
+                Buff::MaaCommandCrit(4),
+                Buff::MaaCommandGuardedDmgH(4),
+                Buff::MaaCommandGuardedDmgL(4),
+            ],
+            Self::Command(3) => &[
+                Buff::MaaCommandAcc(3),
+                Buff::MaaCommandCrit(3),
+                Buff::MaaCommandGuardedDmgH(3),
+                Buff::MaaCommandGuardedDmgL(3),
+            ],
+            Self::Command(2) => &[
+                Buff::MaaCommandAcc(2),
+                Buff::MaaCommandCrit(2),
+                Buff::MaaCommandGuardedDmgH(2),
+                Buff::MaaCommandGuardedDmgL(2),
+            ],
+            Self::Command(1) => &[
+                Buff::MaaCommandAcc(1),
+                Buff::MaaCommandCrit(1),
+                Buff::MaaCommandGuardedDmgH(1),
+                Buff::MaaCommandGuardedDmgL(1),
+            ],
+            Self::BolsterStressBuff(1..=2) => &[Buff::StressDmg(-10)],
+            Self::BolsterStressBuff(3..=4) => &[Buff::StressDmg(-15)],
+            Self::BolsterStressBuff(5) => &[Buff::StressDmg(-20)],
             Self::OnCritAcc => &[Buff::OnCritAcc],
             Self::OnCritBleedChance => &[Buff::OnCritBleedChance],
             Self::OnCritBlightChance => &[Buff::OnCritBlightChance],
             Self::OnCritDef => &[Buff::OnCritDef],
             Self::OnCritDmg => &[Buff::OnCritDmgH, Buff::OnCritDmgL],
             Self::OnCritDmgBleeding => &[Buff::OnCritDmgHBleeding, Buff::OnCritDmgLBleeding],
-            Self::OnCritDmgMarked => &[Buff::OnCritDmgHMarked, Buff::OnCritDmgHMarked],
+            Self::OnCritDmgMarked => &[Buff::OnCritDmgHMarked, Buff::OnCritDmgLMarked],
             Self::OnCritHealDone => &[Buff::OnCritHealBuff],
             Self::OnCritProt => &[Buff::OnCritProt],
             Self::OnCritSpeed => &[Buff::OnCritSpd],
@@ -211,7 +408,26 @@ impl Effect {
             | Self::AntiqDistract(_)
             | Self::AntiqDodge(_)
             | Self::AntiqProtectMeClearGuardsPerformer
-            | Self::AntiqProtectMeClearGuardsTarget => &[],
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard
+            | Self::AntiqSelfSpeed(_)
+            | Self::ArbMarkDebuff(_)
+            | Self::ArbMarkTarget
+            | Self::ArbSelfSpeed(_)
+            | Self::ArbStackingHeal(_)
+            | Self::BeastKiller(_)
+            | Self::BhDmgMarked
+            | Self::BhMarkDebuff(_)
+            | Self::BhMarkTarget
+            | Self::BhMinorMark
+            | Self::BhSelfSpeed(_)
+            | Self::Bleed(_)
+            | Self::BoloPush1(_)
+            | Self::Bolster(_)
+            | Self::CaltropsSpdDebuff(_)
+            | Self::ClearCorpses
+            | Self::ClearGuardPerformer
+            | Self::ClearGuardTarget => &[],
         }
     }
 
@@ -233,6 +449,7 @@ impl Effect {
             | Self::AntiqDodge(_)
             | Self::AntiqProtectMeClearGuardsPerformer
             | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard
             | Self::OnCritAcc
             | Self::OnCritBleedChance
             | Self::OnCritBlightChance
@@ -305,7 +522,8 @@ impl Effect {
             | Self::AntiqBlightBuff(_)
             | Self::AntiqBlightDebuff(_)
             | Self::AntiqProtectMeClearGuardsPerformer
-            | Self::AntiqProtectMeClearGuardsTarget => &[],
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard => &[],
         }
     }
 
@@ -322,7 +540,8 @@ impl Effect {
             | Self::AntiqDistract(_)
             | Self::AntiqDodge(_)
             | Self::AntiqProtectMeClearGuardsPerformer
-            | Self::AntiqProtectMeClearGuardsTarget => None,
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard => None,
         }
     }
 
@@ -336,9 +555,12 @@ impl Effect {
             | Self::OnCritDmgBleeding
             | Self::OnCritDmgMarked
             | Self::OnCritStressResist => Some(Duration::Rounds(3)),
-            Self::AntiqDistract(_) | Self::OnCritBleedChance | Self::OnCritBlightChance | Self::OnCritHealDone | Self::OnCritStressHealDone => {
-                Some(Duration::Rounds(2))
-            }
+            Self::AntiqDistract(_)
+            | Self::AntiqProtectMeGuard
+            | Self::OnCritBleedChance
+            | Self::OnCritBlightChance
+            | Self::OnCritHealDone
+            | Self::OnCritStressHealDone => Some(Duration::Rounds(2)),
             Self::AbyssalStun(_) => Some(Duration::Rounds(1)),
             Self::AbyssalKiller(_)
             | Self::AntiqProtectMeClearGuardsPerformer
@@ -364,6 +586,7 @@ impl Effect {
             | Self::AntiqDodge(_)
             | Self::AntiqProtectMeClearGuardsPerformer
             | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard
             | Self::OnCritAcc
             | Self::OnCritBleedChance
             | Self::OnCritBlightChance
@@ -387,7 +610,8 @@ impl Effect {
             | Self::AntiqDefBuff(_)
             | Self::AntiqDodge(_)
             | Self::AntiqProtectMeClearGuardsPerformer
-            | Self::AntiqProtectMeClearGuardsTarget => true,
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard => true,
             Self::AbyssalKiller(_)
             | Self::AbyssalStun(_)
             | Self::AntiqBlight(_)
@@ -418,6 +642,7 @@ impl Effect {
             Self::AntiqBlight(2..=3) => &[StatusEffect::DotPoison(2)],
             Self::AntiqBlight(4) => &[StatusEffect::DotPoison(3)],
             Self::AntiqBlight(5) => &[StatusEffect::DotPoison(4)],
+            Self::AntiqProtectMeGuard => &[StatusEffect::Guard],
             Self::AbyssalStun(_) => &[StatusEffect::Stun],
             Self::AbyssalKiller(_)
             | Self::AntiqBlightBuff(_)
@@ -427,6 +652,10 @@ impl Effect {
             | Self::AntiqDistract(_)
             | Self::AntiqDodge(_) => &[],
         }
+    }
+
+    const fn swap_source_and_target(&self) -> bool {
+        if matches!(self, Self::AntiqProtectMeGuard) { true } else { false }
     }
 
     const fn target(&self) -> Target {
@@ -454,7 +683,8 @@ impl Effect {
             | Self::AntiqDefBuff(_)
             | Self::AntiqDistract(_)
             | Self::AntiqDodge(_)
-            | Self::AntiqProtectMeClearGuardsTarget => Target::Target,
+            | Self::AntiqProtectMeClearGuardsTarget
+            | Self::AntiqProtectMeGuard => Target::Target,
         }
     }
 }

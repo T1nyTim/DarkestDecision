@@ -509,7 +509,7 @@ impl CombatSkill {
     const fn effects(&self, lv: usize) -> &'static [Effect] {
         match self {
             Self::DirkStab => &[Effect::BuildToFinale(1)],
-            Self::BattlefieldMedicine => &[Effect::Cure, Effect::Cureself],
+            Self::BattlefieldMedicine => &[Effect::Cure, Effect::CureSelf],
             Self::Breakthru => &[Effect::HellionExhaustSm],
             Self::HeroicEnd => &[Effect::MortalWeakness, Effect::MortalWeaknessStress],
             Self::AbyssalArtillery => ABYSSAL_KILLER[lv],
