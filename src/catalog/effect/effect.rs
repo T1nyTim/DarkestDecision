@@ -336,25 +336,30 @@ impl Effect {
 
     const fn buffs(&self) -> &'static [Buff] {
         match self {
-            Self::AntiqBlightBuff(5) => &[Buff::AntiqBlightBuff(5)],
+            Self::AntiqBlightBuff(5..) => &[Buff::AntiqBlightBuff(5)],
             Self::AntiqBlightBuff(4) => &[Buff::AntiqBlightBuff(4)],
             Self::AntiqBlightBuff(3) => &[Buff::AntiqBlightBuff(3)],
             Self::AntiqBlightBuff(2) => &[Buff::AntiqBlightBuff(2)],
             Self::AntiqBlightBuff(1) => &[Buff::AntiqBlightBuff(1)],
-            Self::AntiqBlightDebuff(5) => &[Buff::AntiqBlightDebuff(5)],
+            Self::AntiqBlightDebuff(5..) => &[Buff::AntiqBlightDebuff(5)],
             Self::AntiqBlightDebuff(4) => &[Buff::AntiqBlightDebuff(4)],
             Self::AntiqBlightDebuff(3) => &[Buff::AntiqBlightDebuff(3)],
             Self::AntiqBlightDebuff(2) => &[Buff::AntiqBlightDebuff(2)],
             Self::AntiqBlightDebuff(1) => &[Buff::AntiqBlightDebuff(1)],
+            Self::FortifyResists(5) => &[Buff::BleedResist(15), Buff::BlightResist(15)],
+            Self::FortifyResists(4) => &[Buff::BleedResist(14), Buff::BlightResist(14)],
+            Self::FortifyResists(3) => &[Buff::BleedResist(12), Buff::BlightResist(12)],
+            Self::FortifyResists(2) => &[Buff::BleedResist(11), Buff::BlightResist(11)],
+            Self::FortifyResists(1) => &[Buff::BleedResist(10), Buff::BlightResist(10)],
             Self::BuildToFinale(2) => &[Buff::BuildToFinaleDmgH(2), Buff::BuildToFinaleDmgL(2)],
             Self::BuildToFinale(1) | Self::BuildToFinaleSong => &[Buff::BuildToFinaleDmgH(1), Buff::BuildToFinaleDmgL(1)],
-            Self::CaltropsPreyDebuff(5) => &[Buff::CaltropsDmgReceived(5)],
+            Self::CaltropsPreyDebuff(5..) => &[Buff::CaltropsDmgReceived(5)],
             Self::CaltropsPreyDebuff(4) => &[Buff::CaltropsDmgReceived(4)],
             Self::CaltropsPreyDebuff(3) => &[Buff::CaltropsDmgReceived(3)],
             Self::CaltropsPreyDebuff(2) => &[Buff::CaltropsDmgReceived(2)],
             Self::CaltropsPreyDebuff(1) => &[Buff::CaltropsDmgReceived(1)],
             Self::BellowCrit(_) => &[Buff::MaaBellowCritReceived],
-            Self::Command(5) => &[
+            Self::Command(5..) => &[
                 Buff::MaaCommandAcc(5),
                 Buff::MaaCommandCrit(5),
                 Buff::MaaCommandGuardedDmgH(5),
@@ -386,7 +391,7 @@ impl Effect {
             ],
             Self::BolsterStressBuff(1..=2) => &[Buff::StressDmg(-10)],
             Self::BolsterStressBuff(3..=4) => &[Buff::StressDmg(-15)],
-            Self::BolsterStressBuff(5) => &[Buff::StressDmg(-20)],
+            Self::BolsterStressBuff(5..) => &[Buff::StressDmg(-20)],
             Self::OnCritAcc => &[Buff::OnCritAcc],
             Self::OnCritBleedChance => &[Buff::OnCritBleedChance],
             Self::OnCritBlightChance => &[Buff::OnCritBlightChance],
@@ -427,7 +432,27 @@ impl Effect {
             | Self::CaltropsSpdDebuff(_)
             | Self::ClearCorpses
             | Self::ClearGuardPerformer
-            | Self::ClearGuardTarget => &[],
+            | Self::ClearGuardTarget
+            | Self::CrusaderBulwark(_)
+            | Self::CrusaderBulwarkLight
+            | Self::CrusaderBulwarkMark
+            | Self::CrusaderHealStress(_)
+            | Self::CrusaderLight(_)
+            | Self::Cure
+            | Self::CureSelf
+            | Self::Darkness
+            | Self::DazzlingLight
+            | Self::Defender(_)
+            | Self::Destealth
+            | Self::Disorient(_)
+            | Self::Disrupt(_)
+            | Self::DodgeCurse(_)
+            | Self::EldritchKiller(_)
+            | Self::EmboldenTeam(_)
+            | Self::FlareClear
+            | Self::FlareHealStress(_)
+            | Self::FlareLight(_)
+            | Self::GrAccBuff(_) => &[],
         }
     }
 

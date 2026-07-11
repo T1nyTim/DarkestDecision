@@ -11,6 +11,8 @@ enum ApplicationKind {
 enum Buff {
     AntiqBlightBuff(u8),
     AntiqBlightDebuff(u8),
+    BleedResist(u8),
+    BlightResist(u8),
     BuildToFinaleDmgH(u8),
     BuildToFinaleDmgL(u8),
     CaltropsDmgReceived(u8),
