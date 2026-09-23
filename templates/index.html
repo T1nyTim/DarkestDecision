@@ -65,7 +65,7 @@
                             <div><p class="step">02</p><h2 id="encounter-heading">Encounter</h2></div>
                             <p>Each final option is one composition from the selected encounter set.</p>
                         </div>
-                        <div id="encounter-selection" class="field-grid">
+                        <div class="field-grid" id="encounter-selection">
                             <div class="field">
                                 <label for="location">Location</label>
                                 <select
@@ -84,17 +84,17 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div id="encounter-dependent-fields" class="dependent-fields">
+                            <div class="dependent-fields" id="encounter-dependent-fields">
                                 <div class="field">
                                     <label for="difficulty">Difficulty</label>
                                     <select id="difficulty" name="difficulty" disabled required><option value="">Select location first</option></select>
                                 </div>
-                                <div id="area-and-encounter-fields" class="dependent-fields">
+                                <div class="dependent-fields" id="area-and-encounter-fields">
                                     <div class="field">
                                         <label for="area">Area</label>
                                         <select id="area" name="area" disabled required><option value="">Select difficulty first</option></select>
                                     </div>
-                                    <div id="encounter-field" class="field field-wide">
+                                    <div class="field field-wide" id="encounter-field">
                                         <label for="encounter">Encounter</label>
                                         <select id="encounter" name="encounter" disabled required><option value="">Select area first</option></select>
                                     </div>
@@ -105,7 +105,7 @@
                 </div>
                 <div class="submit-row"><button type="submit">Evaluate state</button><span class="htmx-indicator">Evaluating...</span></div>
             </form>
-            <section id="evaluation" class="evaluation"><p class="muted">No encounter has been submitted.</p></section>
+            <section class="evaluation" id="evaluation"><p class="muted">No encounter has been submitted.</p></section>
         </main>
     </body>
 </html>

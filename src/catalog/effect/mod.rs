@@ -1,3 +1,5 @@
+use crate::catalog::heroes::Mode;
+
 pub mod consts;
 pub mod effect;
 
@@ -9,18 +11,36 @@ enum ApplicationKind {
 }
 
 enum Buff {
+    Acc(u8),
     AntiqBlightBuff(u8),
     AntiqBlightDebuff(u8),
+    BeastBlightBuff(u8),
+    BleedDebuff(u8),
     BleedResist(u8),
+    BlightDebuff(u8),
     BlightResist(u8),
     BuildToFinaleDmgH(u8),
     BuildToFinaleDmgL(u8),
     CaltropsDmgReceived(u8),
+    HellionExDmgH,
+    HellionExDmgHSm,
+    HellionExDmgL,
+    HellionExDmgLSm,
+    HellionExSpd,
+    HellionExSpdSm,
+    JestTuneStressResistance(u8),
+    LeperBleedResist,
+    LeperBlightResist,
+    LeperDebuffResist,
+    LeperDefVuln,
+    LeperDmgVuln,
+    LeperMoveResist,
     MaaBellowCritReceived,
     MaaCommandAcc(u8),
     MaaCommandCrit(u8),
     MaaCommandGuardedDmgH(u8),
     MaaCommandGuardedDmgL(u8),
+    MortalWeaknessStress,
     StressDmg(i8),
     OnCritAcc,
     OnCritBleedChance,
@@ -37,6 +57,10 @@ enum Buff {
     OnCritSpd,
     OnCritStressHealBuff,
     OnCritStressResist,
+    RakeBuffH(u8),
+    RakeBuffL(u8),
+    Spd(i8),
+    VomitBlightResistDebuff(u8),
 }
 
 impl Buff {
@@ -118,10 +142,14 @@ enum BuffKind {
 
 enum CombatStatBuff {
     AttackRatingAdd(i8),
-    DamageLowMultiply(u8),
-    DamageHighMultiply(u8),
-    DefenseRatingAdd(u8),
-    ProtectionRatingAdd(u8),
+    CritChanceAdd(i8),
+    CritReceivedChance(u8),
+    DamageLowMultiply(i8),
+    DamageHighMultiply(i8),
+    DefenseRatingAdd(i8),
+    HpHealReceivedPercent(u8),
+    ProtectionRatingAdd(i16),
+    SpeedRatingAdd(i8),
 }
 
 enum Condition {
@@ -131,11 +159,16 @@ enum Condition {
 }
 
 enum Duration {
+    Combat,
     Rounds(u8),
 }
 
 enum MonsterType {
+    Beast,
+    Corpse,
     Eldritch,
+    Man,
+    Unholy,
 }
 
 enum Stat {
@@ -149,6 +182,8 @@ enum Stat {
 
 enum Status {
     Bleeding,
+    Poisoned,
+    Stunned,
     Tagged,
 }
 
@@ -156,12 +191,31 @@ enum StatusEffect {
     ClearGuarded,
     ClearGuarding,
     Cure,
+    DotBleed(u8),
     DotPoison(u8),
     Guard,
+    Heal { amount: u8, is_skill: bool },
+    HealStress(u8),
+    Kill,
+    Pull(u8),
+    Push(u8),
+    Riposte { damage: i8, crit: u8 },
+    SetMode(Mode),
+    Shuffle,
+    Stealth,
+    Stress(u8),
     Stun,
+    Tag,
+    Torch(i8),
+    Unstealth,
+    Unstun,
+    Untag,
 }
 
 enum Target {
+    Global,
     Performer,
+    PerformerGroupOther,
     Target,
+    TargetGroup,
 }

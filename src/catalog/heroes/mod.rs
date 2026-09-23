@@ -1,4 +1,5 @@
 mod combat_skill;
+mod combat_skills;
 mod heroes;
 
 use serde::Deserialize;
@@ -87,20 +88,23 @@ impl HeroClass {
     }
 }
 
+#[derive(Clone, PartialEq)]
 pub enum Mode {
     Human,
     Beast,
 }
 
-pub enum SkillType {
-    Heal,
-    Melee,
-    Ranged,
+#[derive(Clone, Copy)]
+pub enum SkillData {
+    Heal([(u8, u8); 5]),
+    Melee(AttackData),
+    Ranged(AttackData),
 }
 
+#[derive(Clone, Copy)]
 pub enum TargetMod {
-    Single,
-    Multi,
+    Single(&'static [Rank]),
+    Multi(&'static [Rank]),
     Allies,
     Performer,
     AlliesMulti,
@@ -119,6 +123,25 @@ impl Armour {
     }
 }
 
+#[derive(Clone, Copy)]
+pub struct AttackData {
+    atk: [u8; 5],
+    dmg: [i8; 5],
+    crit: [Percent10; 5],
+    is_crit_valid: bool,
+}
+
+impl AttackData {
+    pub const fn new(atk: [u8; 5], dmg: [i8; 5], crit: [Percent10; 5], is_crit_valid: bool) -> Self {
+        Self {
+            atk,
+            dmg,
+            crit,
+            is_crit_valid,
+        }
+    }
+}
+
 pub struct CombatMoveSkill {
     back: u8,
     forward: u8,
@@ -127,6 +150,108 @@ pub struct CombatMoveSkill {
 impl CombatMoveSkill {
     pub const fn new(back: u8, forward: u8) -> Self {
         Self { back, forward }
+    }
+}
+
+pub struct CombatSkillData {
+    skill: CombatSkill,
+    skill_data: SkillData,
+    movement: (u8, u8),
+    self_target: bool,
+    battle_limit: u8,
+    launch: &'static [Rank],
+    target: TargetMod,
+    ignore_stealth: bool,
+    ignore_protection: bool,
+    ignore_guard: bool,
+    effects: Option<[&'static [Effect]; 5]>,
+    valid_modes: Option<&'static [Mode]>,
+    mode_effects: Option<[(Mode, [&'static [Effect]; 5]); 2]>,
+    is_continue_turn: bool,
+    turn_limit: u8,
+    is_stall_invalidating: bool,
+}
+
+impl CombatSkillData {
+    pub const fn new(skill: CombatSkill, skill_data: SkillData, launch: &'static [Rank], target: TargetMod) -> Self {
+        Self {
+            skill,
+            skill_data,
+            movement: (0, 0),
+            self_target: true,
+            battle_limit: 0,
+            launch,
+            target,
+            ignore_stealth: false,
+            ignore_protection: false,
+            ignore_guard: false,
+            effects: None,
+            valid_modes: None,
+            mode_effects: None,
+            is_continue_turn: false,
+            turn_limit: 0,
+            is_stall_invalidating: true,
+        }
+    }
+
+    pub const fn ignore_guard(mut self) -> Self {
+        self.ignore_guard = true;
+        self
+    }
+
+    pub const fn ignore_protection(mut self) -> Self {
+        self.ignore_protection = true;
+        self
+    }
+
+    pub const fn ignore_stealth(mut self) -> Self {
+        self.ignore_stealth = true;
+        self
+    }
+
+    pub const fn is_continue_turn(mut self) -> Self {
+        self.is_continue_turn = true;
+        self
+    }
+
+    pub const fn not_self_target(mut self) -> Self {
+        self.self_target = false;
+        self
+    }
+
+    pub const fn not_stall_invalidating(mut self) -> Self {
+        self.is_stall_invalidating = false;
+        self
+    }
+
+    pub const fn with_battle_limit(mut self, battle_limit: u8) -> Self {
+        self.battle_limit = battle_limit;
+        self
+    }
+
+    pub const fn with_effects(mut self, effects: [&'static [Effect]; 5]) -> Self {
+        self.effects = Some(effects);
+        self
+    }
+
+    pub const fn with_mode_effects(mut self, mode_effects: [(Mode, [&'static [Effect]; 5]); 2]) -> Self {
+        self.mode_effects = Some(mode_effects);
+        self
+    }
+
+    pub const fn with_modes(mut self, modes: &'static [Mode]) -> Self {
+        self.valid_modes = Some(modes);
+        self
+    }
+
+    pub const fn with_movement(mut self, movement: (u8, u8)) -> Self {
+        self.movement = movement;
+        self
+    }
+
+    pub const fn with_turn_limit(mut self, turn_limit: u8) -> Self {
+        self.turn_limit = turn_limit;
+        self
     }
 }
 
@@ -228,4 +353,8 @@ impl Weapon {
     pub const fn new(dmg: (u8, u8), crit: u8, spd: u8) -> Self {
         Self { dmg, crit, spd }
     }
+}
+
+pub const fn shared_effects(effects: &'static [Effect]) -> [&'static [Effect]; 5] {
+    [effects; 5]
 }

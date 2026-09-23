@@ -1,5 +1,12 @@
 use crate::catalog::effect::effect::Effect;
 
+pub const ABSOLUTION_EFFECTS: [&[Effect]; 5] = [
+    &[Effect::AbsolutionHealStress(1), Effect::AbsolutionHeal(1)],
+    &[Effect::AbsolutionHealStress(2), Effect::AbsolutionHeal(2)],
+    &[Effect::AbsolutionHealStress(3), Effect::AbsolutionHeal(3)],
+    &[Effect::AbsolutionHealStress(4), Effect::AbsolutionHeal(4)],
+    &[Effect::AbsolutionHealStress(5), Effect::AbsolutionHeal(5)],
+];
 pub const ABYSSAL_KILLER: [&[Effect]; 5] = [
     &[Effect::AbyssalKiller(1)],
     &[Effect::AbyssalKiller(2)],
@@ -404,6 +411,13 @@ pub const LICK_WOUNDS: [&[Effect]; 5] = [
     &[Effect::LickWounds(4)],
     &[Effect::LickWounds(5)],
 ];
+pub const MANACLES_STUN: [&[Effect]; 5] = [
+    &[Effect::ManaclesStun(1)],
+    &[Effect::ManaclesStun(2)],
+    &[Effect::ManaclesStun(3)],
+    &[Effect::ManaclesStun(4)],
+    &[Effect::ManaclesStun(5)],
+];
 pub const NOXIOUS_BLAST_EFFECTS: [&[Effect]; 5] = [
     &[Effect::PdSingleBlight(1), Effect::NoxiousDebuff(1)],
     &[Effect::PdSingleBlight(2), Effect::NoxiousDebuff(2)],
@@ -490,6 +504,13 @@ pub const PUSH_1: [&[Effect]; 5] = [
     &[Effect::Push1(4)],
     &[Effect::Push1(5)],
 ];
+pub const RAKEBUFF: [&[Effect]; 5] = [
+    &[Effect::Rakebuff(1)],
+    &[Effect::Rakebuff(2)],
+    &[Effect::Rakebuff(3)],
+    &[Effect::Rakebuff(4)],
+    &[Effect::Rakebuff(5)],
+];
 pub const RAMPART_EFFECTS: [&[Effect]; 5] = [
     &[Effect::Push1(1), Effect::Stun(1)],
     &[Effect::Push1(2), Effect::Stun(2)],
@@ -517,6 +538,13 @@ pub const SHADOW_FADE_EFFECTS: [&[Effect]; 5] = [
     &[Effect::StealthSelf, Effect::GrFadeAttack(3), Effect::GrDodge(3)],
     &[Effect::StealthSelf, Effect::GrFadeAttack(4), Effect::GrDodge(4)],
     &[Effect::StealthSelf, Effect::GrFadeAttack(5), Effect::GrDodge(5)],
+];
+pub const SLAM_EFFECTS: [&[Effect]; 5] = [
+    &[Effect::Push2(1), Effect::SlamDebuff(1)],
+    &[Effect::Push2(2), Effect::SlamDebuff(2)],
+    &[Effect::Push2(3), Effect::SlamDebuff(3)],
+    &[Effect::Push2(4), Effect::SlamDebuff(4)],
+    &[Effect::Push2(5), Effect::SlamDebuff(5)],
 ];
 pub const SLICE_OFF_EFFECTS: [&[Effect]; 5] = [
     &[Effect::StrongBleed(1), Effect::BuildToFinale(1)],
@@ -575,11 +603,11 @@ pub const SUPPRESSION: [&[Effect]; 5] = [
     &[Effect::Suppression(5)],
 ];
 pub const TAKE_AIM_EFFECTS: [&[Effect]; 5] = [
-    &[Effect::TrackingBuff(1), Effect::TakeAim],
-    &[Effect::TrackingBuff(2), Effect::TakeAim],
-    &[Effect::TrackingBuff(3), Effect::TakeAim],
-    &[Effect::TrackingBuff(4), Effect::TakeAim],
-    &[Effect::TrackingBuff(5), Effect::TakeAim],
+    &[Effect::TrackingBuff(1), Effect::Destealth],
+    &[Effect::TrackingBuff(2), Effect::Destealth],
+    &[Effect::TrackingBuff(3), Effect::Destealth],
+    &[Effect::TrackingBuff(4), Effect::Destealth],
+    &[Effect::TrackingBuff(5), Effect::Destealth],
 ];
 pub const TARGET_TAG_EFFECTS: [&[Effect]; 5] = [
     &[Effect::BhMarkTarget, Effect::BhMarkDebuff(1), Effect::BhSelfSpeed(1)],
@@ -602,6 +630,55 @@ pub const TOXIN_TRICKERY_EFFECTS: [&[Effect]; 5] = [
     &[Effect::ShadowBlood(4), Effect::GrSelfSpeed(4)],
     &[Effect::ShadowBlood(5), Effect::GrSelfSpeed(5)],
 ];
+pub const TRANSFORM_BEAST_EFFECTS: [&[Effect]; 5] = [
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(1), Effect::BeastDebuff(1)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(2), Effect::BeastDebuff(2)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(3), Effect::BeastDebuff(3)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(4), Effect::BeastDebuff(4)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(5), Effect::BeastDebuff(5)],
+];
+pub const TRANSFORM_HUMAN_EFFECTS: [&[Effect]; 5] = [
+    &[
+        Effect::SwitchModeBeastSelf,
+        Effect::BeastStressParty,
+        Effect::BeastBuff(1),
+        Effect::BeastBuff2(1),
+        Effect::XformDamage(1),
+        Effect::TransformHealSelf(1),
+    ],
+    &[
+        Effect::SwitchModeBeastSelf,
+        Effect::BeastStressParty,
+        Effect::BeastBuff(2),
+        Effect::BeastBuff2(2),
+        Effect::XformDamage(2),
+        Effect::TransformHealSelf(2),
+    ],
+    &[
+        Effect::SwitchModeBeastSelf,
+        Effect::BeastStressParty,
+        Effect::BeastBuff(2),
+        Effect::BeastBuff2(2),
+        Effect::XformDamage(2),
+        Effect::TransformHealSelf(2),
+    ],
+    &[
+        Effect::SwitchModeBeastSelf,
+        Effect::BeastStressParty,
+        Effect::BeastBuff(2),
+        Effect::BeastBuff2(2),
+        Effect::XformDamage(2),
+        Effect::TransformHealSelf(2),
+    ],
+    &[
+        Effect::SwitchModeBeastSelf,
+        Effect::BeastStressParty,
+        Effect::BeastBuff(2),
+        Effect::BeastBuff2(2),
+        Effect::XformDamage(2),
+        Effect::TransformHealSelf(2),
+    ],
+];
 pub const UNHOLY_KILLER: [&[Effect]; 5] = [
     &[Effect::UnholyKiller(1)],
     &[Effect::UnholyKiller(2)],
@@ -622,6 +699,13 @@ pub const VESTAL_HEALSELF: [&[Effect]; 5] = [
     &[Effect::VestalHealSelf(3)],
     &[Effect::VestalHealSelf(4)],
     &[Effect::VestalHealSelf(5)],
+];
+pub const VOMIT_EFFECTS: [&[Effect]; 5] = [
+    &[Effect::AbomVomit(1), Effect::VomitDebuff(1)],
+    &[Effect::AbomVomit(2), Effect::VomitDebuff(2)],
+    &[Effect::AbomVomit(3), Effect::VomitDebuff(3)],
+    &[Effect::AbomVomit(4), Effect::VomitDebuff(4)],
+    &[Effect::AbomVomit(5), Effect::VomitDebuff(5)],
 ];
 pub const WEAKENING_CURSE_EFFECTS: [&[Effect]; 5] = [
     &[Effect::OccWeakeningCurse(1), Effect::OccWeakenProt(1)],

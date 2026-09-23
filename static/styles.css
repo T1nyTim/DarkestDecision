@@ -15,7 +15,9 @@
     --status-ready: #3bb265; 
 }
 
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -23,7 +25,7 @@
 
 body {
     background-color: var(--bg-app);
-    background-image: radial-gradient(circle at 50% 100%, rgba(177, 25, 0, 0.08) 0%, rgba(95, 4, 0, 0.03) 35%, transparent 65%);
+    background-image: radial-gradient(circle at 50% 100%, rgb(177 25 0 / 0.08) 0%, rgb(95 4 0 / 0.03) 35%, transparent 65%);
     color: var(--text-neutral);
     font-family: system-ui, -apple-system, sans-serif;
     height: 100vh;
@@ -34,29 +36,29 @@ body {
 /* PAGE SHELL */
 .page-shell {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-template-rows: auto 1fr;
+    gap: 32px;
     grid-template-areas:
         "header header header"
         "form form eval";
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto 1fr;
     height: 100%;
-    width: 100%;
     padding: 40px;
-    gap: 32px;
+    width: 100%;
 }
 
 .page-header {
-    grid-area: header;
     border-bottom: 2px solid var(--border-color);
+    grid-area: header;
     padding-bottom: 16px;
 }
 
 .eyebrow {
     color: var(--text-muted);
-    text-transform: uppercase;
     font-size: 12px;
-    letter-spacing: 1px;
     font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 h1 {
