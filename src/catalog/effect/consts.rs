@@ -631,11 +631,11 @@ pub const TOXIN_TRICKERY_EFFECTS: [&[Effect]; 5] = [
     &[Effect::ShadowBlood(5), Effect::GrSelfSpeed(5)],
 ];
 pub const TRANSFORM_BEAST_EFFECTS: [&[Effect]; 5] = [
-    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(1), Effect::BeastDebuff(1)],
-    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(2), Effect::BeastDebuff(2)],
-    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(3), Effect::BeastDebuff(3)],
-    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(4), Effect::BeastDebuff(4)],
-    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty(5), Effect::BeastDebuff(5)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty, Effect::BeastDebuff(1)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty, Effect::BeastDebuff(2)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty, Effect::BeastDebuff(3)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty, Effect::BeastDebuff(4)],
+    &[Effect::SwitchModeHumanSelf, Effect::HumanStressHealParty, Effect::BeastDebuff(5)],
 ];
 pub const TRANSFORM_HUMAN_EFFECTS: [&[Effect]; 5] = [
     &[

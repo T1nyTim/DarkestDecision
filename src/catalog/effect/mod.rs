@@ -2,6 +2,7 @@ use crate::catalog::heroes::Mode;
 
 pub mod consts;
 pub mod effect;
+mod effects;
 
 enum ApplicationKind {
     ApplyOnce,
@@ -218,4 +219,81 @@ enum Target {
     PerformerGroupOther,
     Target,
     TargetGroup,
+}
+
+struct EffectData {
+    target: Target,
+    swap_source_and_target: bool,
+    chance: u8,
+    condition: Option<Condition>,
+    status_effects: &'static [StatusEffect],
+    buffs: &'static [Buff],
+    combat_stat_buffs: &'static [CombatStatBuff],
+    duration: Option<Duration>,
+    on_miss: bool,
+    application_kind: ApplicationKind,
+    apply_on_death: bool,
+}
+
+impl EffectData {
+    const fn new(target: Target, application_kind: ApplicationKind) -> Self {
+        Self {
+            target,
+            swap_source_and_target: false,
+            chance: 100,
+            condition: None,
+            status_effects: &[],
+            buffs: &[],
+            combat_stat_buffs: &[],
+            duration: None,
+            on_miss: false,
+            application_kind,
+            apply_on_death: false,
+        }
+    }
+
+    const fn apply_on_death(mut self) -> Self {
+        self.apply_on_death = true;
+        self
+    }
+
+    const fn apply_on_miss(mut self) -> Self {
+        self.on_miss = true;
+        self
+    }
+
+    const fn swap_source_and_target(mut self) -> Self {
+        self.swap_source_and_target = true;
+        self
+    }
+
+    const fn with_buffs(mut self, buffs: &'static [Buff]) -> Self {
+        self.buffs = buffs;
+        self
+    }
+
+    const fn with_chance(mut self, chance: u8) -> Self {
+        self.chance = chance;
+        self
+    }
+
+    const fn with_combat_stat_buffs(mut self, combat_stat_buffs: &'static [CombatStatBuff]) -> Self {
+        self.combat_stat_buffs = combat_stat_buffs;
+        self
+    }
+
+    const fn with_condition(mut self, condition: Condition) -> Self {
+        self.condition = Some(condition);
+        self
+    }
+
+    const fn with_duration(mut self, duration: Duration) -> Self {
+        self.duration = Some(duration);
+        self
+    }
+
+    const fn with_status_effects(mut self, status_effects: &'static [StatusEffect]) -> Self {
+        self.status_effects = status_effects;
+        self
+    }
 }
